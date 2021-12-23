@@ -72,3 +72,13 @@ void ARARachus::MoveRight(float Value)
 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
 }
+
+void ARARachus::TurnAtRate(float Value)
+{
+	AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void ARARachus::LookUpAtRate(float Value)
+{
+	AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}

@@ -24,12 +24,24 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rachus")
 	float BaseMovementSpeed = 600.f;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Rachus")
+	float BaseTurnRate = 45.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Rachus")
+	float BaseLookUpRate = 45.f;
+
 	UFUNCTION(BlueprintCallable, Category = "Rachus")
 	void MoveForward(float Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Rachus")
 	void MoveRight(float Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Rachus")
+	void TurnAtRate(float Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Rachus")
+	void LookUpAtRate(float Value);
 
 private:
 	void BaseSetup();
