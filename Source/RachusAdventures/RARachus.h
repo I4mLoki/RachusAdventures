@@ -15,13 +15,23 @@ class RACHUSADVENTURES_API ARARachus : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	virtual void BeginPlay() override;
+
 public:
 	ARARachus();
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
-	void InitialSetup();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rachus")
+	float BaseMovementSpeed = 600.f;
+	
+	UFUNCTION(BlueprintCallable, Category = "Rachus")
 	void MoveForward(float Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Rachus")
 	void MoveRight(float Value);
+
+private:
+	void BaseSetup();
+	void InitialGameplaySetup();
 };

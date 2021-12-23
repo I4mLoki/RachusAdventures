@@ -3,13 +3,21 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ARARachus::ARARachus()
 {
-	InitialSetup();
+	BaseSetup();
 }
 
-void ARARachus::InitialSetup()
+void ARARachus::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitialGameplaySetup();
+}
+
+void ARARachus::BaseSetup()
 {
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -25,21 +33,19 @@ void ARARachus::InitialSetup()
 	CameraBoom->TargetArmLength = 300.f;
 	CameraBoom->bUsePawnControlRotation = true;
 
-	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 }
 
+void ARARachus::InitialGameplaySetup()
+{
+	GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+}
+
 void ARARachus::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &ARARachus::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ARARachus::MoveRight);
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
