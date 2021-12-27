@@ -1,5 +1,6 @@
 #include "RARachus.h"
 
+#include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -15,6 +16,11 @@ void ARARachus::BeginPlay()
 	Super::BeginPlay();
 
 	InitialGameplaySetup();
+}
+
+void ARARachus::Tick(float DeltaSeconds)
+{
+	CheckIfMustJump();
 }
 
 void ARARachus::BaseSetup()
@@ -85,6 +91,27 @@ void ARARachus::TurnRate(float Value)
 void ARARachus::LookUpRate(float Value)
 {
 	AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void ARARachus::CheckIfMustJump()
+{
+	const bool IsFalling = GetCharacterMovement()->IsFalling();
+	const FVector Velocity = GetCharacterMovement()->Velocity;
+
+	if (IsFalling) return;
+	if (abs(Velocity.X) < 300 && abs(Velocity.Y) < 300) return;
+
+	const FVector StartTracePoint = GetActorLocation() + GetActorForwardVector() * 50.f;
+	const FVector EndTracePoint = StartTracePoint - FVector(0.f, 0.f, 150.f);
+
+	FHitResult Hit;
+	FCollisionQueryParams TraceParams;
+	GetWorld()->LineTraceSingleByChannel(Hit, StartTracePoint, EndTracePoint, ECC_Visibility, TraceParams);
+	// DrawDebugLine(GetWorld(), StartTracePoint, EndTracePoint, FColor::Red, false, 5.f);
+
+	if (Hit.bBlockingHit) return;
+
+	Jump();
 }
 
 bool ARARachus::Roll()

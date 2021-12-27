@@ -16,6 +16,7 @@ class RACHUSADVENTURES_API ARARachus : public ACharacter
 	class UCameraComponent* FollowCamera;
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
 	ARARachus();
@@ -41,4 +42,5 @@ private:
 	void MoveRight(float Value);
 	void TurnRate(float Value);
 	void LookUpRate(float Value);
+	void CheckIfMustJump();
 };
