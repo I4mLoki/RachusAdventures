@@ -25,7 +25,6 @@ void ARARachus::BaseSetup()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
-	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -41,14 +40,19 @@ void ARARachus::BaseSetup()
 void ARARachus::InitialGameplaySetup()
 {
 	GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+	GetCharacterMovement()->JumpZVelocity = BaseJumpSpeed;
 }
 
 void ARARachus::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &ARARachus::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ARARachus::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("TurnRate", this, &ARARachus::TurnRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &ARARachus::LookUpRate);
 }
 
 void ARARachus::MoveForward(float Value)
@@ -73,12 +77,22 @@ void ARARachus::MoveRight(float Value)
 	AddMovementInput(Direction, Value);
 }
 
-void ARARachus::TurnAtRate(float Value)
+void ARARachus::TurnRate(float Value)
 {
 	AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ARARachus::LookUpAtRate(float Value)
+void ARARachus::LookUpRate(float Value)
 {
 	AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+bool ARARachus::Roll()
+{
+	const FVector Velocity = GetCharacterMovement()->Velocity;
+
+	if (Velocity != FVector::ZeroVector)
+		return true;
+
+	return false;
 }

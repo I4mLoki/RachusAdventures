@@ -20,30 +20,25 @@ class RACHUSADVENTURES_API ARARachus : public ACharacter
 public:
 	ARARachus();
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rachus")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Rachus")
 	float BaseMovementSpeed = 600.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Rachus")
-	float BaseTurnRate = 45.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Rachus")
-	float BaseLookUpRate = 45.f;
+	float BaseJumpSpeed = 300.f;
 
 	UFUNCTION(BlueprintCallable, Category = "Rachus")
-	void MoveForward(float Value);
-
-	UFUNCTION(BlueprintCallable, Category = "Rachus")
-	void MoveRight(float Value);
-
-	UFUNCTION(BlueprintCallable, Category = "Rachus")
-	void TurnAtRate(float Value);
-
-	UFUNCTION(BlueprintCallable, Category = "Rachus")
-	void LookUpAtRate(float Value);
+	bool Roll();
 
 private:
+	float BaseTurnRate = 45.f;
+	float BaseLookUpRate = 45.f;
+
 	void BaseSetup();
 	void InitialGameplaySetup();
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void TurnRate(float Value);
+	void LookUpRate(float Value);
 };
